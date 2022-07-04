@@ -1,34 +1,75 @@
-const User=require('../Models/users')
-exports.getusers=(req,res)=>{
-    const {email,password,firstname,lastname}=req.body
-    const user= new User({
-        email,password,firstname,lastname 
-    })
-    user.save().then(response=>{
-        res.status(200).json({
-            message:"user ragistered  successfully",
-            user:response
+const User = require('../Models/users');
+const bcrypt=require('bcryptjs')
+const jwt=require('jsonwebtoken')
+exports.userSignUp = (req, res) => {
+    const { email, password, firstname, lastname } = req.body;
+const hashedPassword=bcrypt.hashSync(password)
+    const userObj = new User({
+        email,
+        password:hashedPassword,
+        // password,
+        firstname,
+        lastname
+    });
+    User.find(
+      {
+        email,
+        password:hashedPassword
+      })
+      .then((result)=>{
+      if(result.length>0){
+        res.status(400).json({
+          message:"user is already registered"
         })
-    }).catch(err=>console.log(err))
+      }
+      else{
+        userObj.save()
+            .then(response => {
+                res.status(200).json({
+                    message: "User Registered Succesfully",
+                    user: response
+                })
+            })
+            .catch(err => {
+                res.status(500).json({
+                    error: err
+                })
+            })
+      }
+    })
 }
 
-exports.loginusers=(req,res)=>{
-    const {email,password}=req.body
-   
-    User.find({email,password}).then(response=>{
-        if(response.length >0){
-            res.status(200).json({
-                message:"user validated successfully",
-                isAuthenticated:true,
-                user:response
+exports.userLogin = (req, res) => {
+    const { email, password } = req.body;
+
+    User.findOne({
+        email,
+        // password
+    })
+        .then(response => {
+            // console.log(response["password"])
+            if (bcrypt.compareSync(password,response["password"])) {
+                const token=jwt.sign({id:response._id},process.env.JWT_SECRET_KEY,{
+                    expiresIn:"1hr"
+                })
+                res.status(200).json({
+                    message: "User Validated Succesfully",
+                    isAuthenticated: true,
+                    user: response,
+                    token
+                })
+            }
+            else {
+                res.status(400).json({
+                    message: "User Not Validated Succesfully",
+                    isAuthenticated: false,
+                    user: response
+                })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
             })
-        }
-        else{
-            res.status(200).json({
-                message:"user is not validated",
-                isAuthenticated:false,
-                user:response
-            })
-        } 
-    }).catch(err=>console.log(err))
+        })
 }
