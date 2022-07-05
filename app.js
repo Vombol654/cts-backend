@@ -44,11 +44,11 @@ conn.once("open", () => {
 app.get("/file/:filename", async (req, res) => {
   try {
     const file = await gfs.files.findOne({ filename: req.params.filename });
-    console.log(file);
+    // console.log(file);
     const readStream = gridfsBucket.openDownloadStream(file._id); //gfs.createReadStream(file.filename);
     readStream.pipe(res);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.send("Not found");
   }
 });
@@ -58,7 +58,7 @@ app.delete("/file/:filename", async (req, res) => {
     await gfs.files.deleteOne({ filename: req.params.filename });
     res.json({ message: "Successfully deleted..." });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.json({ message: "An error occured..." });
   }
 });

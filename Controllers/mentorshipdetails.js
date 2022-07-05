@@ -2,7 +2,7 @@ const MentorShipDetails = require("../Models/mentorshipdetail");
 exports.getmentordetailsByLangId = (req, res) => {
   const { langId } = req.params;
   console.log(langId);
-  MentorShipDetails.find({ "mentor.language_id": langId })
+  MentorShipDetails.find({ "mentor.language_id": parseInt(langId) })
     .then((response) => {
       console.log(response);
       res.status(200).json({
@@ -46,8 +46,8 @@ exports.filteredmentordetails = (req, res) => {
       console.log(filteredResponse, data);
       res.status(200).json({
         message: "mentor details fetched successfully",
-        mentor: filteredResponse,
-        Data: data,
+        mentorships: filteredResponse,
+        pages: data,
       });
       // else{
       //     res.status(404).json({
@@ -121,4 +121,18 @@ exports.deleteMentorShipDetailById = async (req, res) => {
   const { _id } = req.params;
   const response = await MentorShipDetails.findOneAndDelete({ _id });
   res.json(response);
+};
+
+// UPDATE MENTORSHIP
+
+exports.updateMentorShipDetail = async (req, res) => {
+  const { _id } = req.body;
+  const mentorship = await MentorShipDetails.findOneAndUpdate(
+    { _id },
+    {
+      $set: { ...req.body },
+    }
+  );
+
+  res.json({ mentorship, message: "Successfully Updated..." });
 };

@@ -22,8 +22,9 @@ const mentorDetailsSchema = new Schema({
     },
   },
   callCount: {
-    type: Number | String,
-    default: 0,
+    type: String,
+    default: "0",
+    require: true,
   },
   rating: {
     type: Number,

@@ -34,6 +34,11 @@ route.delete(
   "/mentorshipdetail/delete/:_id",
   mentorshipdetailsController.deleteMentorShipDetailById
 );
+
+route.patch(
+  "/mentorshipdetail/update",
+  mentorshipdetailsController.updateMentorShipDetail
+);
 route.get(
   "/mentorshipdetails/:langId",
   mentorshipdetailsController.getmentordetailsByLangId
