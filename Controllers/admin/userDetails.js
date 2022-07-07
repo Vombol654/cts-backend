@@ -16,3 +16,14 @@ exports.deleteUserById=(req,res)=>{
         })
     })
 }
+
+exports.updateusers=(req,res)=>{
+    UserDetails.findByIdAndUpdate(req.body._id,req.body,{
+        new:true
+    }).then(response=>{
+        res.status(200).json({
+            message:"user details updated successfully",
+            user:response
+        })
+    }).catch(err=>console.log(err))
+}

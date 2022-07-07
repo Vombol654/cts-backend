@@ -17,7 +17,7 @@ route.post('/filter',mentordetailsController.filteredmentordetails)
 route.get('/mentordetail/:mentorId',mentordetailsController.getmentordetailsByMentorId)
 route.post('/payment', paymentController.payment);
 route.post('/callback', paymentController.callback);
-
+// route.patch('/updateuser',userController.updateusers)
 // Admin related route
     // view Mentor
 route.get('/admin/mentordetails',adminMentorController.getmentordetailsforAdmin)
@@ -39,4 +39,6 @@ route.post("/admin/createcourse",adminCourseController.createCourseforAdmin)
 route.get('/admin/userdata',adminUserController.getAllUserDetails)
     // Delete User
 route.delete('/admin/deleteuser',adminUserController.deleteUserById)
+    // Update Course
+route.patch('/updateusers',adminUserController.updateusers)
 module.exports=route
